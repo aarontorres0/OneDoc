@@ -4,9 +4,14 @@ import FileUpload from './FileUpload';
 
 function App() {
   const [files, setFiles] = useState([]);
+  const [pdfName, setPdfName] = useState('');
 
   const handleFilesSelected = (selectedFiles) => {
     setFiles(selectedFiles);
+  };
+
+  const handleNameChange = (event) => {
+    setPdfName(event.target.value);
   };
 
   const mergePDFs = async () => {
@@ -28,7 +33,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'merged_document.pdf';
+    link.download = `${pdfName}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -38,10 +43,19 @@ function App() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-5xl font-bold text-gray-800 mb-4">OneDoc</h1>
       <FileUpload onFilesSelected={handleFilesSelected} />
+
+      <input
+        type="text"
+        value={pdfName}
+        onChange={handleNameChange}
+        placeholder="Enter PDF name"
+        className="mt-4 px-4 py-2 border rounded"
+      />
+
       <button
         onClick={mergePDFs}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        disabled={files.length === 0}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+        disabled={!pdfName || files.length === 0}
       >
         Merge PDFs
       </button>
