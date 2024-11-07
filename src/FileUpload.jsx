@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-function FileUpload({ onFilesSelected }) {
-  const [files, setFiles] = useState([]);
+function FileUpload({ files, onFilesSelected }) {
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (files.length === 0 && fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [files]);
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
-    setFiles(selectedFiles);
     onFilesSelected(selectedFiles);
   };
 
   return (
     <div className="file-upload-container">
       <input
+        ref={fileInputRef}
         type="file"
         accept=".pdf"
         multiple

@@ -26,6 +26,9 @@ function App() {
 
     const mergedPdfData = await mergedPdf.save();
     downloadPDF(mergedPdfData);
+
+    setFiles([]);
+    setPdfName('');
   };
 
   const downloadPDF = (pdfData) => {
@@ -42,7 +45,7 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-5xl font-bold text-gray-800 mb-4">OneDoc</h1>
-      <FileUpload onFilesSelected={handleFilesSelected} />
+      <FileUpload files={files} onFilesSelected={handleFilesSelected} />
 
       <input
         type="text"
