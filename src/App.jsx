@@ -5,13 +5,16 @@ import FileUpload from './FileUpload';
 function App() {
   const [files, setFiles] = useState([]);
   const [pdfName, setPdfName] = useState('');
+  const [warningMessage, setWarningMessage] = useState('');
 
   const handleFilesSelected = (selectedFiles) => {
     setFiles(selectedFiles);
+    setWarningMessage('');
   };
 
   const handleNameChange = (event) => {
     setPdfName(event.target.value);
+    setWarningMessage('');
   };
 
   const moveFile = (index, direction) => {
@@ -22,6 +25,11 @@ function App() {
   };
 
   const mergePDFs = async () => {
+    if (files.length === 0 || !pdfName) {
+      setWarningMessage('Please select PDF files and enter a file name to merge.');
+      return;
+    }
+
     const mergedPdf = await PDFDocument.create();
 
     for (let file of files) {
@@ -38,6 +46,12 @@ function App() {
     setPdfName('');
   };
 
+  const clearFiles = () => {
+    setFiles([]);
+    setPdfName('');
+    setWarningMessage('');
+  };
+
   const downloadPDF = (pdfData) => {
     const blob = new Blob([pdfData], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
@@ -50,7 +64,7 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 sm:mx-0 mx-2">
       <h1 className="text-5xl font-bold text-gray-800 mb-4">OneDoc</h1>
       <FileUpload files={files} onFilesSelected={handleFilesSelected} onMoveFile={moveFile} />
 
@@ -59,16 +73,29 @@ function App() {
         value={pdfName}
         onChange={handleNameChange}
         placeholder="Enter PDF name"
-        className="mt-4 px-4 py-2 border rounded"
+        className="mt-4 px-4 py-2 border rounded w-full max-w-md"
       />
 
-      <button
-        onClick={mergePDFs}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
-        disabled={!pdfName || files.length === 0}
-      >
-        Merge PDFs
-      </button>
+      {warningMessage && (
+        <p className="text-sm text-red-600 mt-4 text-center">
+          {warningMessage}
+        </p>
+      )}
+
+      <div className="mt-4 flex space-x-2">
+        <button
+          onClick={mergePDFs}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Merge PDFs
+        </button>
+        <button
+          onClick={clearFiles}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Clear
+        </button>
+      </div>
     </div>
   );
 }

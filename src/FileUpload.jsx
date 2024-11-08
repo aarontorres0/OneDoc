@@ -25,13 +25,13 @@ function FileUpload({ files, onFilesSelected, onMoveFile }) {
         className="file-input mb-4 w-full px-4 py-2 border rounded"
       />
       {files.length > 0 && (
-        <p className="text-sm text-gray-600 mb-3">
-          ⚠️ PDFs will be merged in this order:
+        <p className="text-sm text-gray-600 mb-3 text-center">
+          ⚠️ PDFs will be merged in the order below. Reorder as needed:
         </p>
       )}
       <div className="file-list space-y-3">
         {files.map((file, index) => (
-          <div key={index} className="p-3 border rounded bg-white shadow">
+          <div key={index} className="p-3 border rounded bg-white shadow mx-2">
             <p className="text-gray-700 font-medium mb-2">{file.name}</p>
             <div className="flex sm:space-x-2 sm:flex-row flex-col">
               <button
