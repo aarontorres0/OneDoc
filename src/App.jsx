@@ -1,11 +1,20 @@
 import { PDFDocument } from 'pdf-lib';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 
 function App() {
   const [files, setFiles] = useState([]);
   const [pdfName, setPdfName] = useState('');
   const [warningMessage, setWarningMessage] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const handleFilesSelected = (selectedFiles) => {
     setFiles(selectedFiles);
@@ -64,8 +73,17 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 sm:mx-0 mx-2">
-      <h1 className="text-5xl font-bold text-gray-800 mb-4">OneDoc</h1>
+    <div className={`flex flex-col items-center justify-center min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'} sm:mx-0 mx-2`}>
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded"
+        >
+          {darkMode ? '🌙' : '☀️'}
+        </button>
+      </div>
+
+      <h1 className="text-5xl font-bold mb-4">OneDoc</h1>
       <FileUpload files={files} onFilesSelected={handleFilesSelected} onMoveFile={moveFile} />
 
       <input
